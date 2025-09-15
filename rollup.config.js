@@ -33,12 +33,7 @@ export default [
             '**/__tests__/**'
         ]
       }),
-        () => {
-            console.log("Apply terser plugin")
-            const terserPlugin = terser()
-            console.log("Check terser plugin", typeof terserPlugin)
-            return terserPlugin
-        }
+      terser(),
     ].filter(Boolean)
   },
   // Build the type definitions
