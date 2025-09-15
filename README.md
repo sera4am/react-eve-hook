@@ -269,7 +269,8 @@ This hook solves common React event handling pain points:
 
 ## 🙏 Acknowledgments
 
-This project was developed with assistance from Claude AI for TypeScript refinements, documentation, and build configuration. The core concept and implementation were human-driven!
+This project was developed with assistance from Claude AI for TypeScript refinements, documentation (like this 😜), 
+build configuration, and brainstorming through conversational exchanges. The core concept and implementation were human-driven!
 
 ## 📄 License
 
