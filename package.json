@@ -1,6 +1,6 @@
 {
   "name": "react-eve-hook",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "description": "React hook for component-scoped event management with automatic cleanup using mitt",
   "main": "dist/index.js",
@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "build:prod": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
     "test": "jest",
     "lint": "eslint src --ext .ts,.tsx",
