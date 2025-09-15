@@ -1,5 +1,8 @@
 import typescript from '@rollup/plugin-typescript';
+import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
+
+const production = process.env.NODE_ENV === 'production';
 
 export default [
   // Build the main bundle
@@ -22,8 +25,9 @@ export default [
       typescript({
         tsconfig: './tsconfig.json',
         exclude: ['**/*.test.*', '**/*.spec.*']
-      })
-    ]
+      }),
+      production && terser()
+    ].filter(Boolean)
   },
   // Build the type definitions
   {

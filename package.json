@@ -1,6 +1,6 @@
 {
   "name": "react-eve-hook",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "React hook for component-scoped event management with automatic cleanup using mitt",
   "main": "dist/index.js",
@@ -44,6 +44,7 @@
     "mitt": "^3.0.1"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
