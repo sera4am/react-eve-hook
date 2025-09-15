@@ -116,7 +116,7 @@ off(null, handleLogin)         // Remove handler from all events
 ```
 
 #### `clear()`
-Remove all event listeners (alias for `off()`).
+Remove all event listeners registered by this component (alias for `off()`).
 
 #### `emit(event, data?)`
 Emit an event with optional data.
@@ -189,7 +189,7 @@ This project was developed with assistance from Claude AI for TypeScript refinem
 
 ## 📄 License
 
-MIT © [Naoto Sera]
+MIT © [Naoto Sera](https://github.com/sera4am)
 
 ## 🤝 Contributing
 
