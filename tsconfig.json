@@ -26,5 +26,8 @@
     "dist",
     "**/*.test.*",
     "**/*.spec.*"
-  ]
+  ],
+  "ts-node": {
+    "esm": true
+  }
 }

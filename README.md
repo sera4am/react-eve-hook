@@ -1,5 +1,10 @@
 # React Eve Hook
 
+![CI](https://github.com/sera4am/react-eve-hook/workflows/CI/badge.svg)
+![npm](https://img.shields.io/npm/v/react-eve-hook)
+![npm downloads](https://img.shields.io/npm/dm/react-eve-hook)
+![License](https://img.shields.io/npm/l/react-eve-hook)
+
 🎯 **Component-scoped event management with automatic cleanup for React**
 
 A lightweight React hook that provides clean event handling with automatic cleanup when components unmount. Built on top of [mitt](https://github.com/developit/mitt) with full TypeScript support.
