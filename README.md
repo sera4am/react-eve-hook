@@ -180,6 +180,83 @@ useEffect(() => {
   return () => evn.off(); // One line cleanup!
 }, []);
 ```
+## 💡 Pro Tips
+
+### No Manual Cleanup Needed (Most Cases)
+
+When using `useEffect` with empty dependencies, manual cleanup is often unnecessary thanks to automatic cleanup on unmount:
+
+```tsx
+function MyComponent() {
+  const evn = useEve();
+
+  useEffect(() => {
+    // These events will be automatically cleaned up when component unmounts
+    evn.on('user-login', (user) => console.log('User logged in:', user));
+    evn.on('notification', (msg) => showToast(msg));
+    evn.on('data-update', (data) => updateUI(data));
+    
+    // ✅ No cleanup needed! Automatic on unmount
+    // return () => evn.off(); // Optional, but not required
+  }, []); // Empty deps = mount once, cleanup on unmount
+
+  return <div>My Component</div>;
+}
+```
+
+### When Manual Cleanup IS Needed
+
+Manual cleanup is useful when you want to remove listeners before component unmounts:
+
+```tsx
+function ConditionalListeners() {
+  const evn = useEve();
+  const [isListening, setIsListening] = useState(false);
+
+  useEffect(() => {
+    if (isListening) {
+      evn.on('some-event', handleEvent);
+      
+      // Clean up when isListening changes to false
+      return () => evn.off('some-event', handleEvent);
+    }
+  }, [isListening]); // Dependencies change = cleanup needed
+
+  return (
+    <button onClick={() => setIsListening(!isListening)}>
+      {isListening ? 'Stop' : 'Start'} Listening
+    </button>
+  );
+}
+```
+
+### Best Practices Summary
+
+1. **Empty deps + anonymous functions** = No manual cleanup needed
+   ```tsx
+   useEffect(() => {
+     evn.on('event', () => { /* anonymous function */ });
+     // Automatic cleanup on unmount ✅
+   }, []);
+   ```
+
+2. **Changing deps** = Manual cleanup recommended
+   ```tsx
+   useEffect(() => {
+     evn.on('event', () => { /* uses changing state */ });
+     return () => evn.off('event'); // Manual cleanup ✅
+   }, [changingDependency]);
+   ```
+
+3. **Conditional listeners** = Always use manual cleanup
+   ```tsx
+   useEffect(() => {
+     if (condition) {
+       evn.on('event', handler);
+       return () => evn.off('event', handler); // Required ✅
+     }
+   }, [condition]);
+   ```
 
 ## 🤔 Why This Hook?
 
