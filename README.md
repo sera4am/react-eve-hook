@@ -48,7 +48,7 @@ function MyComponent() {
   }, []);
 
   const handleClick = () => {
-    ueve.emit('user-login', { name: 'Alice', id: 123 });
+    evn.emit('user-login', { name: 'Alice', id: 123 });
   };
 
   return <button onClick={handleClick}>Login</button>;
