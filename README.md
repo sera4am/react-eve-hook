@@ -35,20 +35,20 @@ pnpm add react-eve-hook
 import useEve, { eve } from 'react-eve-hook';
 
 function MyComponent() {
-  const { on, off, emit } = useEve();
+  const evn = useEve();
 
   useEffect(() => {
     // Register events with anonymous functions (no cleanup needed!)
-    on('user-login', (user) => console.log('User logged in:', user));
-    on('notification', (msg) => showToast(msg));
-    on('data-update', (data) => updateUI(data));
+    evn.on('user-login', (user) => console.log('User logged in:', user));
+    evn.on('notification', (msg) => showToast(msg));
+    evn.on('data-update', (data) => updateUI(data));
     
     // All events are automatically cleaned up on unmount
-    return () => off(); // Clean up all events from this component
+    return () => evn.off(); // Clean up all events from this component
   }, []);
 
   const handleClick = () => {
-    emit('user-login', { name: 'Alice', id: 123 });
+    ueve.emit('user-login', { name: 'Alice', id: 123 });
   };
 
   return <button onClick={handleClick}>Login</button>;
@@ -74,15 +74,15 @@ interface AppEvents {
 }
 
 function TypeSafeComponent() {
-  const { on, emit } = useEve<AppEvents>();
+  const evn = useEve<AppEvents>();
 
   useEffect(() => {
-    on('user-login', (user) => {
+    evn.on('user-login', (user) => {
       // user is automatically typed as { name: string; id: number }
       console.log(user.name, user.id);
     });
 
-    on('notification', (notif) => {
+    evn.on('notification', (notif) => {
       // notif is typed as { message: string; type: 'info' | 'error' | 'success' }
       if (notif.type === 'error') {
         // Type narrowing works!
@@ -91,8 +91,8 @@ function TypeSafeComponent() {
   }, []);
 
   const handleLogin = () => {
-    emit('user-login', { name: 'Bob', id: 456 }); // ✅ Type checked
-    // emit('user-login', { invalid: true }); // ❌ TypeScript error
+    evn.emit('user-login', { name: 'Bob', id: 456 }); // ✅ Type checked
+    // evn.emit('user-login', { invalid: true }); // ❌ TypeScript error
   };
 }
 ```
@@ -101,34 +101,34 @@ function TypeSafeComponent() {
 
 ### `useEve<T>()`
 
-Returns an object with event management functions:
+Returns an event management object with the following methods:
 
-#### `on(event, handler)`
+#### `evn.on(event, handler)`
 Register an event listener.
 
 ```tsx
-on('event-name', (data) => console.log(data));
+evn.on('event-name', (data) => console.log(data));
 ```
 
-#### `off(event?, handler?)`
+#### `evn.off(event?, handler?)`
 Remove event listeners with flexible options:
 
 ```tsx
-off()                          // Remove all events from this component
-off('user-login')              // Remove all 'user-login' handlers
-off('user-login', handleLogin) // Remove specific handler
-off(null, handleLogin)         // Remove handler from all events
+evn.off()                          // Remove all events from this component
+evn.off('user-login')              // Remove all 'user-login' handlers
+evn.off('user-login', handleLogin) // Remove specific handler
+evn.off(null, handleLogin)         // Remove handler from all events
 ```
 
-#### `clear()`
-Remove all event listeners registered by this component (alias for `off()`).
+#### `evn.clear()`
+Remove all event listeners registered by this component (alias for `evn.off()`).
 
-#### `emit(event, data?)`
+#### `evn.emit(event, data?)`
 Emit an event with optional data.
 
 ```tsx
-emit('user-login', { name: 'Alice' });
-emit('simple-event'); // No data
+evn.emit('user-login', { name: 'Alice' });
+evn.emit('simple-event'); // No data
 ```
 
 ### `useEveListen<T>(event, handler)`
@@ -171,15 +171,17 @@ useEffect(() => {
 
 **After (react-eve-hook):**
 ```tsx
+const evn = useEve();
+
 useEffect(() => {
-  on('click', (e) => console.log(e));
-  on('scroll', (e) => console.log(e));
+  evn.on('click', (e) => console.log(e));
+  evn.on('scroll', (e) => console.log(e));
   
-  return () => off(); // One line cleanup!
+  return () => evn.off(); // One line cleanup!
 }, []);
 ```
 
-## 🤝 Why This Hook?
+## 🤔 Why This Hook?
 
 This hook solves common React event handling pain points:
 
