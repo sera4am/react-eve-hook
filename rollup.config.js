@@ -2,7 +2,9 @@ import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
 
+console.log("check env", process.env.NODE_ENV)
 const production = process.env.NODE_ENV === 'production';
+console.log("check production flag", production)
 
 export default [
   // Build the main bundle
