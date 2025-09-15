@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import mitt, { type Emitter, type Handler } from "mitt";
 
 // Define event map type for type-safe events
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventMap = Record<string|symbol|number, any>;
 
 // Global event emitter instance shared across all components
@@ -10,6 +11,7 @@ const emitter: Emitter<EventMap> = mitt<EventMap>();
 // Type for event handler tracking
 interface HandlerEntry<T extends EventMap = EventMap> {
     event: keyof T;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handler: Handler<T[any]>;
 }
 
