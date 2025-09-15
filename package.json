@@ -1,6 +1,6 @@
 {
   "name": "react-eve-hook",
-  "version": "1.0.0",
+  "version": "0.0.14",
   "type": "module",
   "description": "React hook for component-scoped event management with automatic cleanup using mitt",
   "main": "dist/index.js",
