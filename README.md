@@ -133,7 +133,7 @@ evn.emit('simple-event'); // No data
 
 ### `useEveListen<T>(event, handler)`
 
-Simple hook for direct event listening (manual cleanup required):
+Simple hook for direct event listening (manual cleanup not required):
 
 ```tsx
 useEveListen('user-login', (user) => {
