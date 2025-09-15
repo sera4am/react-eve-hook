@@ -1,9 +1,9 @@
 # React Eve Hook
 
 ![CI](https://github.com/sera4am/react-eve-hook/workflows/CI/badge.svg)
-![npm](https://img.shields.io/npm/v/react-eve-hook)
+[![npm](https://img.shields.io/npm/v/react-eve-hook)](https://www.npmjs.com/package/react-eve-hook)
 ![npm downloads](https://img.shields.io/npm/dm/react-eve-hook)
-![License](https://img.shields.io/npm/l/react-eve-hook)
+[![License](https://img.shields.io/npm/l/react-eve-hook)](https://github.com/sera4am/react-eve-hook/blob/main/LICENSE)
 
 🎯 **Component-scoped event management with automatic cleanup for React**
 
