@@ -71,6 +71,8 @@ jobs:
 
     - name: Build package
       run: npm run build
+      env:
+        NODE_ENV: production
 
     - name: Check if version changed
       id: version-check

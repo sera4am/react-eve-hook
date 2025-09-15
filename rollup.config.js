@@ -24,7 +24,12 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        exclude: ['**/*.test.*', '**/*.spec.*']
+        exclude: [
+            '**/*.test.*',
+            '**/*.spec.*',
+            '**/setupTests.ts',
+            '**/__tests__/**'
+        ]
       }),
       production && terser()
     ].filter(Boolean)
