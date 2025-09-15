@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18, 20, 21]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run type check
+      run: npm run typecheck
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build package
+      run: npm run build
+
+    - name: Check build output
+      run: |
+        ls -la dist/
+        test -f dist/index.js
+        test -f dist/index.esm.js
+        test -f dist/index.d.ts
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build package
+      run: npm run build
+
+    - name: Check if version changed
+      id: version-check
+      run: |
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        PUBLISHED_VERSION=$(npm view react-eve-hook version 2>/dev/null || echo "0.0.0")
+        if [ "$CURRENT_VERSION" != "$PUBLISHED_VERSION" ]; then
+          echo "version-changed=true" >> $GITHUB_OUTPUT
+          echo "Version changed from $PUBLISHED_VERSION to $CURRENT_VERSION"
+        else
+          echo "version-changed=false" >> $GITHUB_OUTPUT
+          echo "Version unchanged: $CURRENT_VERSION"
+        fi
+
+    - name: Publish to npm
+      if: steps.version-check.outputs.version-changed == 'true'
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Create GitHub Release
+      if: steps.version-check.outputs.version-changed == 'true'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ env.PACKAGE_VERSION }}
+        release_name: Release v${{ env.PACKAGE_VERSION }}
+        draft: false
+        prerelease: false
