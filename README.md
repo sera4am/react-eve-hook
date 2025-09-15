@@ -31,7 +31,7 @@ pnpm add react-eve-hook
 
 ## 🚀 Quick Start
 
-```tsx
+```typescript jsx
 import useEve, { eve } from 'react-eve-hook';
 
 function MyComponent() {
@@ -66,7 +66,7 @@ function OtherComponent() {
 
 Define your event types for full type safety:
 
-```tsx
+```typescript jsx
 interface AppEvents {
   'user-login': { name: string; id: number };
   'user-logout': undefined;
@@ -106,14 +106,14 @@ Returns an event management object with the following methods:
 #### `evn.on(event, handler)`
 Register an event listener.
 
-```tsx
+```typescript jsx
 evn.on('event-name', (data) => console.log(data));
 ```
 
 #### `evn.off(event?, handler?)`
 Remove event listeners with flexible options:
 
-```tsx
+```typescript jsx
 evn.off()                          // Remove all events from this component
 evn.off('user-login')              // Remove all 'user-login' handlers
 evn.off('user-login', handleLogin) // Remove specific handler
@@ -126,7 +126,7 @@ Remove all event listeners registered by this component (alias for `evn.off()`).
 #### `evn.emit(event, data?)`
 Emit an event with optional data.
 
-```tsx
+```typescript jsx
 evn.emit('user-login', { name: 'Alice' });
 evn.emit('simple-event'); // No data
 ```
@@ -135,7 +135,7 @@ evn.emit('simple-event'); // No data
 
 Simple hook for direct event listening (manual cleanup not required):
 
-```tsx
+```typescript jsx
 useEveListen('user-login', (user) => {
   console.log('User:', user);
 });
@@ -145,7 +145,7 @@ useEveListen('user-login', (user) => {
 
 Global function to emit events from anywhere:
 
-```tsx
+```typescript jsx
 import { eve } from 'react-eve-hook';
 
 eve('notification', { message: 'Global event!' });
@@ -154,7 +154,7 @@ eve('notification', { message: 'Global event!' });
 ## 🔄 Migration from DOM Events
 
 **Before (DOM events):**
-```tsx
+```typescript jsx
 useEffect(() => {
   const handler1 = (e) => console.log(e);
   const handler2 = (e) => console.log(e);
@@ -170,7 +170,7 @@ useEffect(() => {
 ```
 
 **After (react-eve-hook):**
-```tsx
+```typescript jsx
 const evn = useEve();
 
 useEffect(() => {
@@ -186,7 +186,7 @@ useEffect(() => {
 
 When using `useEffect` with empty dependencies, manual cleanup is often unnecessary thanks to automatic cleanup on unmount:
 
-```tsx
+```typescript jsx
 function MyComponent() {
   const evn = useEve();
 
@@ -208,7 +208,7 @@ function MyComponent() {
 
 Manual cleanup is useful when you want to remove listeners before component unmounts:
 
-```tsx
+```typescript jsx
 function ConditionalListeners() {
   const evn = useEve();
   const [isListening, setIsListening] = useState(false);
@@ -233,7 +233,7 @@ function ConditionalListeners() {
 ### Best Practices Summary
 
 1. **Empty deps + anonymous functions** = No manual cleanup needed
-   ```tsx
+   ```typescript jsx
    useEffect(() => {
      evn.on('event', () => { /* anonymous function */ });
      // Automatic cleanup on unmount ✅
@@ -241,7 +241,7 @@ function ConditionalListeners() {
    ```
 
 2. **Changing deps** = Manual cleanup recommended
-   ```tsx
+   ```typescript jsx
    useEffect(() => {
      evn.on('event', () => { /* uses changing state */ });
      return () => evn.off('event'); // Manual cleanup ✅
@@ -249,7 +249,7 @@ function ConditionalListeners() {
    ```
 
 3. **Conditional listeners** = Always use manual cleanup
-   ```tsx
+   ```typescript jsx
    useEffect(() => {
      if (condition) {
        evn.on('event', handler);
