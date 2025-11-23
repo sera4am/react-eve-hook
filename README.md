@@ -175,8 +175,9 @@ const evn = useEve();
 useEffect(() => {
   evn.on('click', (e) => console.log(e));
   evn.on('scroll', (e) => console.log(e));
-  
-  return () => evn.off(); // One line cleanup!
+
+  // return () => evn.off();
+  // Cleanup is optional - listeners are automatically cleared when the component unmounts
 }, []);
 ```
 ## 💡 Pro Tips
