@@ -43,8 +43,7 @@ function MyComponent() {
     evn.on('notification', (msg) => showToast(msg));
     evn.on('data-update', (data) => updateUI(data));
     
-    // All events are automatically cleaned up on unmount
-    return () => evn.off(); // Clean up all events from this component
+    // return () => evn.off(); // No cleanup is required—all events are automatically cleaned up on unmount
   }, []);
 
   const handleClick = () => {
