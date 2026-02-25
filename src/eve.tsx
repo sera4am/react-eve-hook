@@ -23,6 +23,9 @@ interface UseEveReturn<T extends EventMap = EventMap> {
     emit: <K extends keyof T>(event: K, data?: T[K]) => void;
 }
 
+type EveListenCleanup = () => void;
+type EveListenHandler<T> = (data: T) => void | EveListenCleanup;
+
 /**
  * React hook for component-scoped event management with automatic cleanup.
  *
@@ -144,16 +147,33 @@ export default useEve;
  * @template K - Specific event key type
  *
  * @param {K} event - Event name to listen for
- * @param {Handler<T[K]> | undefined} handler - Function to call when event is emitted
+ * @param {EveListenHandler<T[K]> | undefined} handler - Function to call when event is emitted. If it returns a cleanup function, it will run right before listener removal.
  */
 export const useEveListen = <T extends EventMap = EventMap, K extends keyof T = keyof T>(
     event: K,
-    handler: Handler<T[K]> | undefined
+    handler: EveListenHandler<T[K]> | undefined
 ): void => {
     useEffect(() => {
         if (handler) {
-            emitter.on(event, handler);
-            return () => emitter.off(event, handler);
+            let cleanupHandler: EveListenCleanup | undefined;
+
+            const wrappedHandler: Handler<T[K]> = (data: T[K]) => {
+                const cleanup = handler(data);
+                cleanupHandler = typeof cleanup === "function" ? cleanup : undefined;
+            };
+
+            emitter.on(event, wrappedHandler);
+
+            return () => {
+                if (cleanupHandler) {
+                    try {
+                        cleanupHandler();
+                    } catch {
+                        // Ignore cleanup errors to keep unsubscription safe
+                    }
+                }
+                emitter.off(event, wrappedHandler);
+            };
         }
     }, [event, handler]);
 };

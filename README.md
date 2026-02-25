@@ -140,6 +140,15 @@ useEveListen('user-login', (user) => {
 });
 ```
 
+You can also return a cleanup function from the handler. It runs right before the listener is removed (on unmount or dependency change):
+
+```typescript jsx
+useEveListen('stream-event', (payload) => {
+  const subscription = startStream(payload);
+  return () => subscription.stop();
+});
+```
+
 ### `eve<T>(event, data?)`
 
 Global function to emit events from anywhere:

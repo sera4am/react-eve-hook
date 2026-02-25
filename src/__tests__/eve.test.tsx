@@ -287,6 +287,62 @@ describe('useEveListen', () => {
     expect(mockHandler1).toHaveBeenCalledTimes(1);
     expect(mockHandler2).toHaveBeenCalledWith('data-2');
   });
+
+  it('should run returned cleanup when listener is removed', () => {
+    const cleanup = jest.fn();
+    const mockHandler = jest.fn(() => cleanup);
+
+    const { unmount } = renderHook(() =>
+      useEveListen('test-event', mockHandler)
+    );
+
+    act(() => {
+      eve('test-event', 'test-data');
+    });
+
+    expect(cleanup).not.toHaveBeenCalled();
+
+    act(() => {
+      unmount();
+    });
+
+    expect(cleanup).toHaveBeenCalledTimes(1);
+  });
+
+  it('should execute returned cleanup before unsubscription', () => {
+    let callCount = 0;
+    const mockHandler = jest.fn(() => {
+      callCount += 1;
+      if (callCount === 1) {
+        return () => {
+          eve('test-event', 'during-cleanup');
+        };
+      }
+      return undefined;
+    });
+
+    const { unmount } = renderHook(() =>
+      useEveListen('test-event', mockHandler)
+    );
+
+    act(() => {
+      eve('test-event', 'initial');
+    });
+
+    expect(mockHandler).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      unmount();
+    });
+
+    expect(mockHandler).toHaveBeenCalledTimes(2);
+
+    act(() => {
+      eve('test-event', 'after-unmount');
+    });
+
+    expect(mockHandler).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('eve (global emit)', () => {
