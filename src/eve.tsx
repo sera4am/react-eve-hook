@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, type DependencyList } from "react";
 import mitt, { type Emitter, type Handler } from "mitt";
 
 // Define event map type for type-safe events
@@ -151,7 +151,8 @@ export default useEve;
  */
 export const useEveListen = <T extends EventMap = EventMap, K extends keyof T = keyof T>(
     event: K,
-    handler: EveListenHandler<T[K]> | undefined
+    handler: EveListenHandler<T[K]> | undefined,
+    dependencies: DependencyList = []
 ): void => {
     useEffect(() => {
         if (handler) {
@@ -175,7 +176,7 @@ export const useEveListen = <T extends EventMap = EventMap, K extends keyof T = 
                 emitter.off(event, wrappedHandler);
             };
         }
-    }, [event, handler]);
+    }, [event, handler, ...dependencies]);
 };
 
 /**

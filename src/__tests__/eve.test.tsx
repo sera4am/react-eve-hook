@@ -343,6 +343,32 @@ describe('useEveListen', () => {
 
     expect(mockHandler).toHaveBeenCalledTimes(2);
   });
+
+  it('should re-register when dependencies change', () => {
+    const cleanup = jest.fn();
+    const mockHandler = jest.fn(() => cleanup);
+
+    const { rerender } = renderHook(
+      ({ dep }) => useEveListen('test-event', mockHandler, [dep]),
+      { initialProps: { dep: 1 } }
+    );
+
+    act(() => {
+      eve('test-event', 'before-rerender');
+    });
+
+    expect(mockHandler).toHaveBeenCalledTimes(1);
+
+    rerender({ dep: 2 });
+
+    expect(cleanup).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      eve('test-event', 'after-rerender');
+    });
+
+    expect(mockHandler).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('eve (global emit)', () => {
